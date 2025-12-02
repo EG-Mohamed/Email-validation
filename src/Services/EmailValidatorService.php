@@ -75,13 +75,7 @@ class EmailValidatorService
 
     public function validateDisposable(string $email): bool
     {
-        $isValid = true;
-
         $rule = new Indisposable();
-        $rule->validate('email', $email, function ($message) use (&$isValid) {
-            $isValid = false;
-        });
-
-        return $isValid;
+        return $rule->passes('email', $email);
     }
 }
