@@ -4,16 +4,14 @@ namespace MohamedSaid\EmailValidation\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Support\Str;
 use MohamedSaid\EmailValidation\Services\EmailValidatorService;
 
 class EmailValidationRule implements ValidationRule
 {
-    protected EmailValidatorService $service;
-
-    public function __construct()
-    {
-        $this->service = app(EmailValidatorService::class);
+    public function __construct(
+        protected ?EmailValidatorService $service = null
+    ) {
+        $this->service ??= app(EmailValidatorService::class);
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
