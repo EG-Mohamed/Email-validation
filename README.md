@@ -1,19 +1,20 @@
-# This is my package email-validation
+# Email Validation for Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/eg-mohamed/email-validation.svg?style=flat-square)](https://packagist.org/packages/eg-mohamed/email-validation)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/eg-mohamed/email-validation/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/eg-mohamed/email-validation/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/eg-mohamed/email-validation/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/eg-mohamed/email-validation/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/eg-mohamed/email-validation.svg?style=flat-square)](https://packagist.org/packages/eg-mohamed/email-validation)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+A comprehensive Laravel package for advanced email validation combining RFC compliance checks, DNS/MX record verification, and disposable email detection. Built on top of `egulias/email-validator` and `propaganistas/laravel-disposable-email`.
 
-## Support us
+## Features
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/Email-validation.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/Email-validation)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+- **RFC Syntax Validation**: Validates email format against RFC 5321, 5322, 6530, 6531, 6532, and 1035
+- **DNS/MX Record Verification**: Checks if the email domain has valid MX records
+- **Disposable Email Detection**: Blocks temporary/disposable email providers
+- **Configurable Validations**: Enable/disable specific validation checks via config
+- **Custom Error Messages**: Customize validation error messages
+- **Facade Support**: Easy access via Laravel facade
 
 ## Installation
 
@@ -23,14 +24,7 @@ You can install the package via composer:
 composer require eg-mohamed/email-validation
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="email-validation-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
+Optionally, you can publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="email-validation-config"
@@ -40,21 +34,102 @@ This is the contents of the published config file:
 
 ```php
 return [
+    'validations' => [
+        'syntax' => true,
+        'dns' => true,
+        'disposable' => true,
+    ],
+
+    'messages' => [
+        'syntax' => 'The :attribute must be a valid email address.',
+        'dns' => 'The :attribute domain does not have valid MX records.',
+        'disposable' => 'Disposable email addresses are not allowed.',
+    ],
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="email-validation-views"
 ```
 
 ## Usage
 
+### Using the Validation Rule
+
+You can use the `email_validation` rule in your validation rules:
+
 ```php
-$emailValidation = new MohamedSaid\EmailValidation();
-echo $emailValidation->echoPhrase('Hello, MohamedSaid!');
+use Illuminate\Http\Request;
+
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'email' => ['required', 'email_validation'],
+    ]);
+}
 ```
+
+### Using the Rule Class
+
+You can also use the rule class directly:
+
+```php
+use MohamedSaid\EmailValidation\Rules\EmailValidationRule;
+
+$request->validate([
+    'email' => ['required', new EmailValidationRule()],
+]);
+```
+
+### Using the Facade
+
+The package provides a facade for programmatic validation:
+
+```php
+use MohamedSaid\EmailValidation\Facades\EmailValidation;
+
+if (EmailValidation::isValid('user@example.com')) {
+    // Email is valid
+}
+
+$results = EmailValidation::validate('user@example.com');
+
+$failures = EmailValidation::getFailures('user@example.com');
+```
+
+### Configuration
+
+You can control which validations are performed by modifying the config file:
+
+```php
+return [
+    'validations' => [
+        'syntax' => true,      // RFC syntax validation
+        'dns' => true,         // DNS/MX record check
+        'disposable' => true,  // Disposable email detection
+    ],
+];
+```
+
+### Custom Error Messages
+
+Customize the error messages for each validation type:
+
+```php
+return [
+    'messages' => [
+        'syntax' => 'Please enter a valid email address.',
+        'dns' => 'This email domain cannot receive emails.',
+        'disposable' => 'Temporary email addresses are not allowed.',
+    ],
+];
+```
+
+## Validation Order
+
+Validations are performed in the following order for optimal performance:
+
+1. **Syntax validation** (fastest)
+2. **Disposable email check** (medium)
+3. **DNS/MX verification** (slowest)
+
+The validation stops at the first failure to minimize processing time.
 
 ## Testing
 

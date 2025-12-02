@@ -2,7 +2,8 @@
 
 namespace MohamedSaid\EmailValidation;
 
-use MohamedSaid\EmailValidation\Commands\EmailValidationCommand;
+use Illuminate\Support\Facades\Validator;
+use MohamedSaid\EmailValidation\Rules\EmailValidationRule;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -10,16 +11,23 @@ class EmailValidationServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package
             ->name('email-validation')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_email_validation_table')
-            ->hasCommand(EmailValidationCommand::class);
+            ->hasConfigFile();
+    }
+
+    public function packageBooted(): void
+    {
+        Validator::extend('email_validation', function ($attribute, $value, $parameters, $validator) {
+            $rule = new EmailValidationRule();
+            $passes = true;
+
+            $rule->validate($attribute, $value, function ($message) use (&$passes, $validator, $attribute) {
+                $passes = false;
+                $validator->errors()->add($attribute, $message);
+            });
+
+            return $passes;
+        });
     }
 }
