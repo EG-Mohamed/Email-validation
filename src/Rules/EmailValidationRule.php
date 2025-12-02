@@ -4,6 +4,7 @@ namespace MohamedSaid\EmailValidation\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Str;
 use MohamedSaid\EmailValidation\Services\EmailValidatorService;
 
 class EmailValidationRule implements ValidationRule
@@ -17,7 +18,7 @@ class EmailValidationRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! is_string($value)) {
-            $fail('email-validation::email-validation.syntax')->translate();
+            $fail($this->getMessage('syntax', $attribute));
 
             return;
         }
@@ -32,10 +33,31 @@ class EmailValidationRule implements ValidationRule
 
         foreach ($validations as $key => $validation) {
             if (($config[$key] ?? true) && ! $validation()) {
-                $fail("email-validation::email-validation.{$key}")->translate();
+                $fail($this->getMessage($key, $attribute));
 
                 return;
             }
         }
+    }
+
+    protected function getMessage(string $key, string $attribute): string
+    {
+        return __("email-validation::email-validation.{$key}", [
+            'attribute' => $this->getAttributeName($attribute),
+        ]);
+    }
+
+    protected function getAttributeName(string $attribute): string
+    {
+        // Extract the last segment (e.g., "email" from "data.email")
+        $key = Str::afterLast($attribute, '.');
+
+        // Try to get the translation
+        $translated = __("validation.attributes.{$key}");
+
+        // If translation exists, return it; otherwise format the key
+        return $translated !== "validation.attributes.{$key}"
+            ? $translated
+            : Str::replace(['_', '.'], ' ', $key);
     }
 }
