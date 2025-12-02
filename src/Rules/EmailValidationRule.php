@@ -18,8 +18,7 @@ class EmailValidationRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! is_string($value)) {
-            $fail(__('email-validation::email-validation.syntax'));
-
+            $fail(__('email-validation::email-validation.syntax', ['attribute' => $attribute]));
             return;
         }
 
@@ -27,24 +26,21 @@ class EmailValidationRule implements ValidationRule
 
         if ($config['syntax'] ?? true) {
             if (! $this->service->validateSyntax($value)) {
-                $fail(__('email-validation::email-validation.syntax'));
-
+                $fail(__('email-validation::email-validation.syntax', ['attribute' => $attribute]));
                 return;
             }
         }
 
         if ($config['disposable'] ?? true) {
             if (! $this->service->validateDisposable($value)) {
-                $fail(__('email-validation::email-validation.disposable'));
-
+                $fail(__('email-validation::email-validation.disposable', ['attribute' => $attribute]));
                 return;
             }
         }
 
         if ($config['dns'] ?? true) {
             if (! $this->service->validateDns($value)) {
-                $fail(__('email-validation::email-validation.dns'));
-
+                $fail(__('email-validation::email-validation.dns', ['attribute' => $attribute]));
                 return;
             }
         }
