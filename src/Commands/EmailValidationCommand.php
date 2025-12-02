@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace MohamedSaid\EmailValidation\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class EmailValidationCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'email-validation';
 
     public $description = 'My command';
 
