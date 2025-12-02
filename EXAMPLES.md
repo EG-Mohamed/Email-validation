@@ -213,17 +213,19 @@ return [
 ];
 ```
 
-### Custom Error Messages in Arabic
+### Using Arabic Translations
+
+Set your application locale to Arabic:
 
 ```php
-return [
-    'messages' => [
-        'syntax' => 'يجب أن يكون :attribute عنوان بريد إلكتروني صالح.',
-        'dns' => 'نطاق :attribute لا يحتوي على سجلات MX صالحة.',
-        'disposable' => 'عناوين البريد الإلكتروني المؤقتة غير مسموح بها.',
-    ],
-];
+// config/app.php
+'locale' => 'ar',
+
+// Or in a controller/middleware
+App::setLocale('ar');
 ```
+
+The package automatically uses the correct translation based on your application's locale.
 
 ## Advanced Usage
 

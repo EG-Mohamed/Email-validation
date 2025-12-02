@@ -13,7 +13,8 @@ class EmailValidationServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('email-validation')
-            ->hasConfigFile();
+            ->hasConfigFile()
+            ->hasTranslations();
     }
 
     public function packageBooted(): void

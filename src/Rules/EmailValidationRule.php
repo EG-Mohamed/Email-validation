@@ -18,30 +18,29 @@ class EmailValidationRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!is_string($value)) {
-            $fail(__('The :attribute must be a valid email address.'));
+            $fail(__('email-validation::email-validation.syntax'));
             return;
         }
 
         $config = config('email-validation.validations', []);
-        $messages = config('email-validation.messages', []);
 
         if ($config['syntax'] ?? true) {
             if (!$this->service->validateSyntax($value)) {
-                $fail($messages['syntax'] ?? __('The :attribute must be a valid email address.'));
+                $fail(__('email-validation::email-validation.syntax'));
                 return;
             }
         }
 
         if ($config['disposable'] ?? true) {
             if (!$this->service->validateDisposable($value)) {
-                $fail($messages['disposable'] ?? __('Disposable email addresses are not allowed.'));
+                $fail(__('email-validation::email-validation.disposable'));
                 return;
             }
         }
 
         if ($config['dns'] ?? true) {
             if (!$this->service->validateDns($value)) {
-                $fail($messages['dns'] ?? __('The :attribute domain does not have valid MX records.'));
+                $fail(__('email-validation::email-validation.dns'));
                 return;
             }
         }

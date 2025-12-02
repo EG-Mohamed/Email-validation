@@ -39,14 +39,16 @@ return [
         'dns' => true,
         'disposable' => true,
     ],
-
-    'messages' => [
-        'syntax' => 'The :attribute must be a valid email address.',
-        'dns' => 'The :attribute domain does not have valid MX records.',
-        'disposable' => 'Disposable email addresses are not allowed.',
-    ],
 ];
 ```
+
+You can also publish the translations:
+
+```bash
+php artisan vendor:publish --tag="email-validation-translations"
+```
+
+The package includes English and Arabic translations by default.
 
 ## Usage
 
@@ -109,15 +111,23 @@ return [
 
 ### Custom Error Messages
 
-Customize the error messages for each validation type:
+Customize the error messages by publishing and editing the translation files:
 
+**English (lang/en/email-validation.php):**
 ```php
 return [
-    'messages' => [
-        'syntax' => 'Please enter a valid email address.',
-        'dns' => 'This email domain cannot receive emails.',
-        'disposable' => 'Temporary email addresses are not allowed.',
-    ],
+    'syntax' => 'The :attribute must be a valid email address.',
+    'dns' => 'The :attribute domain does not have valid MX records.',
+    'disposable' => 'Disposable email addresses are not allowed.',
+];
+```
+
+**Arabic (lang/ar/email-validation.php):**
+```php
+return [
+    'syntax' => 'يجب أن يكون :attribute عنوان بريد إلكتروني صالح.',
+    'dns' => 'نطاق :attribute لا يحتوي على سجلات MX صالحة.',
+    'disposable' => 'عناوين البريد الإلكتروني المؤقتة غير مسموح بها.',
 ];
 ```
 
