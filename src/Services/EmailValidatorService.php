@@ -5,6 +5,7 @@ namespace MohamedSaid\EmailValidation\Services;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use Propaganistas\LaravelDisposableEmail\Facades\DisposableDomains;
 use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
 
 class EmailValidatorService
@@ -75,7 +76,6 @@ class EmailValidatorService
 
     public function validateDisposable(string $email): bool
     {
-        $rule = new Indisposable();
-        return $rule->passes('email', $email);
+        return DisposableDomains::isNotDisposable($email);
     }
 }
