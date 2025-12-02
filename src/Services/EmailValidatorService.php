@@ -63,17 +63,17 @@ class EmailValidatorService
         return $failures;
     }
 
-    protected function validateSyntax(string $email): bool
+    public function validateSyntax(string $email): bool
     {
         return $this->validator->isValid($email, new RFCValidation());
     }
 
-    protected function validateDns(string $email): bool
+    public function validateDns(string $email): bool
     {
         return $this->validator->isValid($email, new DNSCheckValidation());
     }
 
-    protected function validateDisposable(string $email): bool
+    public function validateDisposable(string $email): bool
     {
         $isValid = true;
 

@@ -27,4 +27,19 @@ class EmailValidation
     {
         return $this->service->getFailures($email);
     }
+
+    public function validateSyntax(string $email): bool
+    {
+        return $this->service->validateSyntax($email);
+    }
+
+    public function validateDns(string $email): bool
+    {
+        return $this->service->validateDns($email);
+    }
+
+    public function validateDisposable(string $email): bool
+    {
+        return $this->service->validateDisposable($email);
+    }
 }
