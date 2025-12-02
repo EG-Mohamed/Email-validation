@@ -13,7 +13,7 @@ class EmailValidatorService
 
     public function __construct()
     {
-        $this->validator = new EmailValidator();
+        $this->validator = new EmailValidator;
     }
 
     public function validate(string $email): array
@@ -41,7 +41,7 @@ class EmailValidatorService
         $results = $this->validate($email);
 
         foreach ($results as $result) {
-            if (!$result) {
+            if (! $result) {
                 return false;
             }
         }
@@ -55,7 +55,7 @@ class EmailValidatorService
         $failures = [];
 
         foreach ($results as $key => $result) {
-            if (!$result) {
+            if (! $result) {
                 $failures[] = $key;
             }
         }
@@ -65,17 +65,18 @@ class EmailValidatorService
 
     public function validateSyntax(string $email): bool
     {
-        return $this->validator->isValid($email, new RFCValidation());
+        return $this->validator->isValid($email, new RFCValidation);
     }
 
     public function validateDns(string $email): bool
     {
-        return $this->validator->isValid($email, new DNSCheckValidation());
+        return $this->validator->isValid($email, new DNSCheckValidation);
     }
 
     public function validateDisposable(string $email): bool
     {
-        $rule = new Indisposable();
+        $rule = new Indisposable;
+
         return $rule->passes('email', $email);
     }
 }
