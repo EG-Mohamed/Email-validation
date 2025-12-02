@@ -1,6 +1,6 @@
 {
     "name": "eg-mohamed/email-validation",
-    "description": "This is my package email-validation",
+    "description": "A comprehensive Laravel package for advanced email validation combining RFC compliance checks, DNS/MX record verification, and disposable email detection.",
     "keywords": [
         "eg-mohamed",
         "laravel",
