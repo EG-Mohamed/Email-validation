@@ -20,7 +20,7 @@ class EmailValidationServiceProvider extends PackageServiceProvider
     public function packageBooted(): void
     {
         Validator::extend('email_validation', function ($attribute, $value, $parameters, $validator) {
-            $rule = new EmailValidationRule();
+            $rule = new EmailValidationRule;
             $passes = true;
 
             $rule->validate($attribute, $value, function ($message) use (&$passes, $validator, $attribute) {

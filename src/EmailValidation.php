@@ -10,7 +10,7 @@ class EmailValidation
 
     public function __construct()
     {
-        $this->service = new EmailValidatorService();
+        $this->service = new EmailValidatorService;
     }
 
     public function validate(string $email): array
